@@ -76,6 +76,7 @@ class Computer < Player
   end
 end
 
+# Game Orchestration Engine
 class RPSGame
   attr_accessor :human, :computer
 
