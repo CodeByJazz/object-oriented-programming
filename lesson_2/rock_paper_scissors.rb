@@ -1,36 +1,3 @@
-=begin 
-1. Write a textual description of the problem or exercise.
-2. Extract the major nouns and verbs from the description.
-3. Organize and associate the verbs with the nouns.
-4. The nouns are the classes and the verbs are the behaviors or methods.
-
-#----------
-Rock, Paper, Scissors is a two-player game where each player chooses one of the three possible moves: rock, paper, or scissors. The chosen moves will then be compared to see who wins, according to the following rules:
-
--rock beats scissors
--scissors beats paper
--paper beats rock 
-
-If the players choose the same move, then it's a tie
-
-#----------
-Nouns: player, move, rule
-Verbs: choose, compare
-
-def initialize 
-  end
-Player 
--choose
-
-Move (R,P,S)
-
-Rule
-
--compare-
-
-#----------
-=end
-
 class Move
   VALUES = ['rock', 'paper', 'scissors']
 
@@ -51,29 +18,15 @@ class Move
   end
 
   def >(other_move)
-    if rock?
-      return true if other_move.scissors?
-      return false
-    elsif paper?
-      return true if other_move.rock?
-      return false
-    elsif scissors?
-      return true if other_move.paper?
-      return false
-    end
+    (rock? && other_move.scissors?) ||
+    (paper? && other_move.rock?) ||
+    (scissors? && other_move.paper?) 
   end
 
   def <(other_move)
-    if rock?
-      return true if other_move.paper?
-      return false
-    elsif paper?
-      return true if other_move.scissors?
-      return false
-    elsif scissors?
-      return true if other_move.rock?
-      return false
-    end
+    (rock? && other_move.paper?) ||
+    (paper? && other_move.scissors?) ||
+    (scissors? && other_move.rock?)
   end
 
   def to_s
@@ -81,7 +34,7 @@ class Move
   end
 end
 
-class Player 
+class Player
   attr_accessor :move, :name
 
   def initialize
@@ -92,7 +45,7 @@ end
 class Human < Player
   def set_name
     n = ""
-    loop do 
+    loop do
       puts "What's your name?"
       n = gets.chomp
       break unless n.empty?
@@ -126,7 +79,7 @@ end
 class RPSGame
   attr_accessor :human, :computer
 
-  def initialize 
+  def initialize
     @human = Human.new
     @computer = Computer.new
   end
@@ -139,37 +92,40 @@ class RPSGame
     puts "Thanks for playing Rock, Paper, Scissors. Good bye!"
   end
 
-  def display_winner 
-    puts "#{human.name} chose #{human.move}"
-    puts "#{computer.name} chose #{computer.move}"
+  def display_moves
+    puts "#{human.name} chose #{human.move}."
+    puts "#{computer.name} chose #{computer.move}."
+  end
 
+  def display_winner
     if human.move > computer.move
       puts "#{human.name} won!"
     elsif human.move < computer.move
       puts "#{computer.name} won!"
-    else 
+    else
       puts "It's a tie!"
     end
   end
 
   def play_again?
     answer = nil
-    loop do 
+    loop do
       puts "Would you like to play again? (y/n)"
       answer = gets.chomp
       break if ['y', 'n'].include?(answer.downcase)
       puts "Sorry, must be y or n."
-    end 
+    end
 
-    return true if answer == 'y'
-    return false
+    return false if answer.downcase == 'n'
+    return true if answer.downcase == 'y'
   end
 
-  def play 
+  def play
     display_welcome_message
     loop do
       human.choose
       computer.choose
+      display_moves
       display_winner
       break unless play_again?
     end
