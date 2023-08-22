@@ -1,29 +1,10 @@
-=begin   
-Description: 
-
-Tic Tac Toe is a 2-player board game played on a 3x3 grid. Players take turns marking a square. The first player to mark 3 squares in a row wins.
-
-Verbs and Nouns:
-
-Nouns: board, player, square, grid
-Verbs: play, mark
-
-Organzing:
-
-Board 
-Square 
-Player 
-  - mark 
-  - play
-=end
 require "pry"
 
 class Board
-  INITIAL_MARKER = " "
 
   def initialize
     @squares = {}
-    (1..9).each {|key| @squares[key] = Square.new(INITIAL_MARKER)}
+    (1..9).each {|key| @squares[key] = Square.new}
   end 
 
   def get_square_at(key)
@@ -37,12 +18,18 @@ class Board
   def unmarked_keys
     @squares.keys.select {|key| @squares[key].unmarked?}
   end 
+
+  def full?
+    unmarked_keys.empty?
+  end
 end 
 
 class Square 
+  INITIAL_MARKER = " "
+
   attr_accessor :marker
 
-  def initialize(marker)
+  def initialize(marker=INITIAL_MARKER)
     @marker = marker
   end
 
@@ -51,7 +38,7 @@ class Square
   end 
 
   def unmarked?
-    marker == Board::INITIAL_MARKER
+    marker == INITIAL_MARKER
   end
 end 
 
@@ -84,6 +71,8 @@ class TTTGame
   end
 
   def display_board
+    system 'clear'
+    puts "You're a #{human.marker}. Computer is a #{computer.marker}."
     puts ""
     puts "     |     |"
     puts "  #{board.get_square_at(1)}  |  #{board.get_square_at(2)}  |  #{board.get_square_at(3)}"
@@ -115,21 +104,27 @@ class TTTGame
     board.set_square_at(board.unmarked_keys.sample, computer.marker)
   end
 
+  def display_result
+    display_board
+    puts "The board is full."
+  end
+
   def play 
     display_welcome_message
     display_board
     loop do 
   
       human_moves 
-    
+      break if board.full?
       #break if someone_won? || board_full?
 
       computer_moves
-    
+      break if board.full?
       #break if someone_won? || board_full?
+
       display_board
     end
-    # display_result 
+    display_result 
     display_goodbye_message
   end
 end
