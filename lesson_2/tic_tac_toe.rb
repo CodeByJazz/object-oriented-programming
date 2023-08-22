@@ -90,10 +90,11 @@ class Square
 end
 
 class Player
-  attr_reader :marker
+  attr_reader :marker, :name
 
-  def initialize(marker)
+  def initialize(marker, name = ["C3PO", "Wall-E", "Buzz Lightyear"].sample)
     @marker = marker
+    @name = name
   end
 end
 
@@ -106,7 +107,7 @@ class TTTGame
 
   def initialize
     @board = Board.new
-    @human = Player.new(HUMAN_MARKER)
+    @human = Player.new(HUMAN_MARKER, human_name)
     @computer = Player.new(COMPUTER_MARKER)
     @current_marker = FIRST_TO_MOVE
   end
@@ -121,16 +122,16 @@ class TTTGame
   private
 
   def display_welcome_message
-    puts "Welcome to Tic Tac Toe!"
+    puts "Welcome to Tic Tac Toe #{human.name}!"
     puts ""
   end
 
   def display_goodbye_message
-    puts "Thanks for playing Tic Tac Toe! Goodbye!"
+    puts "Thanks for playing Tic Tac Toe #{human.name}! Goodbye!"
   end
 
   def display_board
-    puts "You're a #{human.marker}. Computer is a #{computer.marker}."
+    puts "You're a #{human.marker}. #{computer.name} is a #{computer.marker}."
     puts ""
     board.draw
     puts ""
@@ -140,6 +141,16 @@ class TTTGame
     clear
     display_board
   end
+
+  def human_name 
+    name = nil
+    loop do 
+      puts "Please enter your name: "
+      name = gets.chomp
+      break if name.class == String
+    end
+    name
+  end 
 
   def human_moves
     puts "Choose a square (#{board.unmarked_keys.join(', ')}): "
@@ -163,7 +174,7 @@ class TTTGame
     when human.marker
       puts "You won!"
     when computer.marker
-      puts "Computer won!"
+      puts "#{computer.name} won!"
     else
       puts "It's a tie!"
     end
