@@ -99,17 +99,15 @@ class Player
 end
 
 class TTTGame
-  HUMAN_MARKER = "X"
   COMPUTER_MARKER = "O"
-  FIRST_TO_MOVE = HUMAN_MARKER
 
   attr_reader :board, :human, :computer
 
   def initialize
     @board = Board.new
-    @human = Player.new(HUMAN_MARKER, human_name)
+    @human = Player.new(human_marker, human_name)
     @computer = Player.new(COMPUTER_MARKER)
-    @current_marker = FIRST_TO_MOVE
+    @current_marker = human.marker
   end
 
   def play
@@ -122,12 +120,12 @@ class TTTGame
   private
 
   def display_welcome_message
-    puts "Welcome to Tic Tac Toe #{human.name}!"
+    puts "Welcome to Tic Tac Toe, #{human.name}!"
     puts ""
   end
 
   def display_goodbye_message
-    puts "Thanks for playing Tic Tac Toe #{human.name}! Goodbye!"
+    puts "Thanks for playing Tic Tac Toe! Goodbye, #{human.name}!"
   end
 
   def display_board
@@ -143,14 +141,26 @@ class TTTGame
   end
 
   def human_name 
-    name = nil
+    puts "Please enter your name: "
+    name = ""
     loop do 
-      puts "Please enter your name: "
       name = gets.chomp
-      break if name.class == String
+      break unless name.empty?
+      puts "Sorry, must enter name!"
     end
     name
   end 
+
+  def human_marker 
+    puts "Pick any marker: "
+    marker = ""
+    loop do 
+      marker = gets.chomp
+      break unless marker.empty?
+      puts "Invalid choice, try again!"
+    end
+    marker
+  end
 
   def human_moves
     puts "Choose a square (#{board.unmarked_keys.join(', ')}): "
@@ -198,7 +208,7 @@ class TTTGame
 
   def reset
     board.reset
-    @current_marker = FIRST_TO_MOVE
+    @current_marker = human.marker
     clear
   end
 
@@ -213,12 +223,12 @@ class TTTGame
       @current_marker = COMPUTER_MARKER
     else
       computer_moves
-      @current_marker = HUMAN_MARKER
+      @current_marker = human.marker
     end
   end
 
   def human_turn?
-    @current_marker == HUMAN_MARKER
+    @current_marker == human.marker
   end
 
   def player_move
