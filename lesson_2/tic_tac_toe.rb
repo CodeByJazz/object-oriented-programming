@@ -1,22 +1,20 @@
-require "pry"
-
 class Board
-  WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + #rows
-                  [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + #columns
-                  [[1, 5, 9], [3, 5, 7]]              #diagonals
+  WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
+                  [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # columns
+                  [[1, 5, 9], [3, 5, 7]]              # diagonals
 
   def initialize
     @squares = {}
     reset
-  end 
+  end
 
   def []=(num, marker)
     @squares[num].marker = marker
   end
 
   def unmarked_keys
-    @squares.keys.select {|key| @squares[key].unmarked?}
-  end 
+    @squares.keys.select { |key| @squares[key].unmarked? }
+  end
 
   def full?
     unmarked_keys.empty?
@@ -26,20 +24,22 @@ class Board
     !!winning_marker
   end
 
-  #return winning marker or nil
+  # return winning marker or nil
   def winning_marker
     WINNING_LINES.each do |line|
       squares = @squares.values_at(*line)
       if three_identical_markers?(squares)
         return squares.first.marker
       end
-    end 
+    end
     nil
   end
 
-  def reset 
-    (1..9).each {|key| @squares[key] = Square.new}
-  end 
+  def reset
+    (1..9).each { |key| @squares[key] = Square.new }
+  end
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
 
   def draw
     puts "     |     |"
@@ -55,16 +55,19 @@ class Board
     puts "     |     |"
   end
 
-  private 
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+
+  private
 
   def three_identical_markers?(squares)
     markers = squares.select(&:marked?).collect(&:marker)
     return false if markers.size != 3
     markers.min == markers.max
   end
-end 
+end
 
-class Square 
+class Square
   INITIAL_MARKER = " "
 
   attr_accessor :marker
@@ -73,9 +76,9 @@ class Square
     @marker = marker
   end
 
-  def to_s 
+  def to_s
     @marker
-  end 
+  end
 
   def unmarked?
     marker == INITIAL_MARKER
@@ -84,15 +87,15 @@ class Square
   def marked?
     marker != INITIAL_MARKER
   end
-end 
+end
 
-class Player 
+class Player
   attr_reader :marker
 
   def initialize(marker)
     @marker = marker
   end
-end 
+end
 
 class TTTGame
   HUMAN_MARKER = "X"
@@ -101,34 +104,22 @@ class TTTGame
 
   attr_reader :board, :human, :computer
 
-  def initialize 
+  def initialize
     @board = Board.new
     @human = Player.new(HUMAN_MARKER)
     @computer = Player.new(COMPUTER_MARKER)
     @current_marker = FIRST_TO_MOVE
   end
 
-  def play 
+  def play
     clear
     display_welcome_message
-
-    loop do 
-      display_board
-      loop do 
-        current_player_moves
-        break if board.someone_won? || board.full?
-        clear_screen_and_display_board if human_turn?
-      end
-      display_result 
-      break unless play_again?
-      reset
-      display_play_again_message
-    end
+    main_game
     display_goodbye_message
   end
 
-  private 
-  
+  private
+
   def display_welcome_message
     puts "Welcome to Tic Tac Toe!"
     puts ""
@@ -153,14 +144,14 @@ class TTTGame
   def human_moves
     puts "Choose a square (#{board.unmarked_keys.join(', ')}): "
     square = nil
-    loop do 
+    loop do
       square = gets.chomp.to_i
       break if board.unmarked_keys.include?(square)
       puts "Sorry, that's not a valid choice."
     end
 
     board[square] = human.marker
-  end 
+  end
 
   def computer_moves
     board[board.unmarked_keys.sample] = computer.marker
@@ -173,14 +164,14 @@ class TTTGame
       puts "You won!"
     when computer.marker
       puts "Computer won!"
-    else 
+    else
       puts "It's a tie!"
     end
   end
 
   def play_again?
     answer = nil
-    loop do 
+    loop do
       puts "Would you like to play again? (y/n)"
       answer = gets.chomp.downcase
       break if %(y n).include?(answer)
@@ -190,17 +181,17 @@ class TTTGame
     answer == 'y'
   end
 
-  def clear 
+  def clear
     system 'clear'
   end
 
-  def reset 
+  def reset
     board.reset
     @current_marker = FIRST_TO_MOVE
     clear
   end
 
-  def display_play_again_message 
+  def display_play_again_message
     puts "Let's play again!"
     puts ""
   end
@@ -209,7 +200,7 @@ class TTTGame
     if human_turn?
       human_moves
       @current_marker = COMPUTER_MARKER
-    else 
+    else
       computer_moves
       @current_marker = HUMAN_MARKER
     end
@@ -218,8 +209,27 @@ class TTTGame
   def human_turn?
     @current_marker == HUMAN_MARKER
   end
+
+  def player_move
+    loop do
+      current_player_moves
+      break if board.someone_won? || board.full?
+      clear_screen_and_display_board if human_turn?
+    end
+  end
+
+  def main_game
+    loop do
+      display_board
+      player_move
+      display_result
+      break unless play_again?
+      reset
+      display_play_again_message
+    end
+  end
 end
 
-#we'll kick off the game like this 
+# we'll kick off the game like this
 game = TTTGame.new
 game.play
