@@ -1,6 +1,8 @@
 class Move
   VALUES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
 
+  attr_reader :value
+
   def initialize(value)
     @value = value
   end
@@ -59,10 +61,11 @@ end
 
 class Player
   attr_accessor :move, :name
-  attr_reader :score 
+  attr_reader :score, :moves
 
   def initialize
     @score = 0
+    @moves = []
     set_name
   end
 
@@ -72,6 +75,10 @@ class Player
 
   def reset_score 
     @score = 0 
+  end
+
+  def add_move
+    @moves << move
   end
 end
 
@@ -98,6 +105,7 @@ class Human < Player
       puts ""
     end
     self.move = Move.new(choice)
+    self.add_move
   end
 end
 
@@ -108,6 +116,7 @@ class Computer < Player
 
   def choose
     self.move = Move.new(Move::VALUES.sample)
+    self.add_move
   end
 end
 
@@ -163,6 +172,11 @@ class RPSGame
     end
   end
 
+  def display_player_moves
+    puts "#{human.name}'s moves: #{human.moves.collect(&:value)}"
+    puts "#{computer.name}'s moves: #{computer.moves.collect(&:value)}"
+  end
+
   def reset_game
     system 'clear'
     human.reset_score
@@ -198,6 +212,7 @@ class RPSGame
       break unless play_again?
     end
     display_goodbye_message
+    display_player_moves
   end
 end
 
