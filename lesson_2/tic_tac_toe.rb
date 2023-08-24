@@ -162,8 +162,15 @@ class TTTGame
     marker
   end
 
+  def joinor(keys, punctuation=', ', conjunction='or')
+    return "" if keys.empty?
+    return keys[0] if keys.size == 1
+    return "#{keys[0]} or #{keys[1]}" if keys.size == 2
+    keys.join(punctuation).insert(-3, " #{conjunction}")
+  end
+
   def human_moves
-    puts "Choose a square (#{board.unmarked_keys.join(', ')}): "
+    puts "Choose a square (#{joinor(board.unmarked_keys)}): "
     square = nil
     loop do
       square = gets.chomp.to_i
