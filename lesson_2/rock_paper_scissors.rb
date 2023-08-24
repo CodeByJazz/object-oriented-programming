@@ -115,7 +115,18 @@ class Computer < Player
   end
 
   def choose
-    self.move = Move.new(Move::VALUES.sample)
+    case name
+    when 'R2D2'
+      self.move = Move.new('rock')
+    when 'Hal'
+      self.move = Move.new(['rock', 'scissors', 'scissors', 'lizard', 'spock'].sample)
+    when 'Chappie'
+      self.move = Move.new(['paper', 'scissors', 'lizard', 'spock', 'spock'].sample)
+    when 'Sonny'
+      self.move = Move.new(['rock', 'paper', 'scissors'].sample)
+    when 'Number 5'
+      self.move = Move.new(['lizard', 'spock'].sample)
+    end
     self.add_move
   end
 end
