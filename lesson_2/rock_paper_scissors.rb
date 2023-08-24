@@ -36,9 +36,19 @@ end
 
 class Player
   attr_accessor :move, :name
+  attr_reader :score 
 
   def initialize
+    @score = 0
     set_name
+  end
+
+  def add_point
+    @score += 1
+  end
+
+  def reset_score 
+    @score = 0 
   end
 end
 
@@ -50,6 +60,7 @@ class Human < Player
       n = gets.chomp
       break unless n.empty?
       puts "Sorry, must enter a value."
+      puts ""
     end
     self.name = n
   end
@@ -58,9 +69,10 @@ class Human < Player
     choice = nil
     loop do 
       puts "Please choose rock, paper, or scissors:"
-      choice = gets.chomp
+      choice = gets.chomp.downcase
       break if Move::VALUES.include? choice
       puts "Sorry, invalid choice."
+      puts ""
     end
     self.move = Move.new(choice)
   end
@@ -93,19 +105,45 @@ class RPSGame
     puts "Thanks for playing Rock, Paper, Scissors. Good bye!"
   end
 
+ 
   def display_moves
+    puts ""
     puts "#{human.name} chose #{human.move}."
     puts "#{computer.name} chose #{computer.move}."
   end
 
-  def display_winner
+  def display_round_winner
     if human.move > computer.move
-      puts "#{human.name} won!"
+      puts "#{human.name} won this round!"
+      puts ""
+      human.add_point
     elsif human.move < computer.move
-      puts "#{computer.name} won!"
+      puts "#{computer.name} won this round!"
+      puts ""
+      computer.add_point
     else
-      puts "It's a tie!"
+      puts "It's a tie for this round!"
+      puts ""
     end
+  end 
+
+  def display_game_winner
+    if human.score > computer.score
+      puts "#{human.name} won the game!"
+      puts ""
+    elsif human.score < computer.score
+      puts "#{computer.name} won the game!"
+      puts ""
+    elsif human.score == computer.score
+      puts "It's a tie!"
+      puts ""
+    end
+  end
+
+  def reset_game
+    system 'clear'
+    human.reset_score
+    computer.reset_score
   end
 
   def play_again?
@@ -115,6 +153,7 @@ class RPSGame
       answer = gets.chomp
       break if ['y', 'n'].include?(answer.downcase)
       puts "Sorry, must be y or n."
+      puts ""
     end
 
     return false if answer.downcase == 'n'
@@ -123,11 +162,16 @@ class RPSGame
 
   def play
     display_welcome_message
-    loop do
-      human.choose
-      computer.choose
-      display_moves
-      display_winner
+    loop do 
+      reset_game
+      loop do
+        human.choose
+        computer.choose
+        display_moves
+        display_round_winner
+        break if human.score == 3 || computer.score == 3
+      end
+      display_game_winner
       break unless play_again?
     end
     display_goodbye_message
