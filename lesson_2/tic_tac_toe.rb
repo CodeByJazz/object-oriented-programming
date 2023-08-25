@@ -90,11 +90,20 @@ class Square
 end
 
 class Player
-  attr_reader :marker, :name
+  attr_reader :marker, :name, :score
 
   def initialize(marker, name = ["C3PO", "Wall-E", "Buzz Lightyear"].sample)
+    @score = 0
     @marker = marker
     @name = name
+  end
+
+  def add_point
+    @score += 1
+  end
+
+  def reset_score 
+    @score = 0 
   end
 end
 
@@ -120,7 +129,7 @@ class TTTGame
   private
 
   def display_welcome_message
-    puts "Welcome to Tic Tac Toe, #{human.name}!"
+    puts "Welcome to Tic Tac Toe, #{human.name}! First player to 3 points wins the game."
     puts ""
   end
 
@@ -133,6 +142,7 @@ class TTTGame
     puts ""
     board.draw
     puts ""
+    display_score
   end
 
   def clear_screen_and_display_board
@@ -185,16 +195,32 @@ class TTTGame
     board[board.unmarked_keys.sample] = computer.marker
   end
 
-  def display_result
+  def display_game_winner
+    clear_screen_and_display_board
+    if human.score == 3
+      puts "#{human.name} won!"
+    elsif computer.score == 3
+      puts "#{computer.name} won!"
+    else 
+      puts "It's a tie!"
+    end
+    puts ""
+  end
+
+  def increment_player_score
     clear_screen_and_display_board
     case board.winning_marker
     when human.marker
-      puts "You won!"
+      human.add_point
     when computer.marker
-      puts "#{computer.name} won!"
+      computer.add_point
     else
-      puts "It's a tie!"
     end
+  end
+
+  def display_score 
+    puts "#{human.name}: #{human.score} p | #{computer.name}: #{computer.score} p"
+    puts ""
   end
 
   def play_again?
@@ -247,10 +273,17 @@ class TTTGame
   end
 
   def main_game
-    loop do
-      display_board
-      player_move
-      display_result
+    loop do 
+      human.reset_score 
+      computer.reset_score
+      loop do 
+        display_board
+        player_move
+        increment_player_score
+        break if human.score == 3 || computer.score == 3   
+        reset
+      end
+      display_game_winner
       break unless play_again?
       reset
       display_play_again_message
