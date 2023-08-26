@@ -162,9 +162,16 @@ class TwentyOne
   end
 
   def reset 
+    self.deck = Deck.new
+    player.cards = []
+    dealer.cards = []
   end
 
   def deal_cards
+    2.times do 
+      player.add_card(deck.deal_one)
+      dealer.add_card(deck.deal_one)
+    end
   end
 
   def show_flop
@@ -198,5 +205,5 @@ class TwentyOne
   end
 end 
 
-game = TwentyOne.new.start
+game = TwentyOne.new
 game.start
