@@ -153,6 +153,42 @@ class Dealer < Participant
 end
 
 class TwentyOne 
+  attr_accessor :deck, :player, :dealer
+
+  def initialize 
+    @deck = Deck.new
+    @player = Player.new
+    @dealer = Dealer.new
+  end
+
+  def reset 
+  end
+
+  def deal_cards
+  end
+
+  def show_flop
+  end
+
+  def player_turn 
+  end 
+
+  def dealer_turn
+  end
+
+  def show_busted
+  end
+
+  def show_cards
+  end
+
+  def show_result 
+  end
+
+  def play_again?
+  end
+
+
   def start 
     deal_cards
     show_initial_cards
@@ -162,4 +198,5 @@ class TwentyOne
   end
 end 
 
-TwentyOne.new.start
+game = TwentyOne.new.start
+game.start
