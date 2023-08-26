@@ -257,11 +257,40 @@ class TwentyOne
   end
 
   def start 
-    deal_cards
-    show_initial_cards
-    player_turn
-    dealer_turn
-    show_result
+    loop do 
+      system 'clear'
+      deal_cards
+      show_flop
+
+      player_turn
+      if player.busted?
+        show_busted
+        if play_again?
+          reset
+          next
+        else 
+          break 
+        end
+      end
+
+      dealer_turn
+      if dealer.busted?
+        show_busted
+        if play_again?
+          reset
+          next
+        else
+          break 
+        end 
+      end
+
+      #both stayed 
+      show_cards
+      show_result
+      play_again? ? reset : break
+    end
+
+    puts "Thank you for playing Twenty-One. Goodbye!"
   end
 end 
 
