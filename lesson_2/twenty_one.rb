@@ -245,6 +245,15 @@ class TwentyOne
   end
 
   def play_again?
+    answer = nil
+    loop do 
+      puts "Would you like to play again? (y/n)"
+      answer = gets.chomp.downcase
+      break if ["y", "n"].include?(answer)
+      puts "Sorry, must be y or n."
+    end
+
+    answer == 'y'
   end
 
   def start 
