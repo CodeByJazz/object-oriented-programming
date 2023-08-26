@@ -230,14 +230,22 @@ class TwentyOne
   end
 
   def show_cards
+    player.show_hand
+    dealer.show_hand
   end
 
   def show_result 
+    if player.total > dealer.total
+      puts "It looks like #{player.name} wins!"
+    elsif player.total < dealer.total
+      puts "It looks like #{dealer.name} wins!"
+    else
+      puts "It's a tie!"
+    end 
   end
 
   def play_again?
   end
-
 
   def start 
     deal_cards
