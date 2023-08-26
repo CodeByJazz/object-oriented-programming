@@ -2,7 +2,7 @@ class Card
   SUITS = ["H", "D", "C", "S"]
   FACES = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
 
-  def initialize
+  def initialize(suit, face)
     @suit = suit 
     @face = face 
   end
@@ -126,6 +126,7 @@ class Player < Participant
     name = ''
     loop do 
       puts "What's your name?"
+      name = gets.chomp
       break unless name.empty?
       puts "Sorry, must enter a name!"
     end
@@ -212,6 +213,7 @@ class TwentyOne
     loop do 
       if dealer.total >= 17 && !dealer.busted?
         puts "#{dealer.name} stays!"
+        break
       elsif dealer.busted?
         break 
       else
