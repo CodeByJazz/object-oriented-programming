@@ -73,7 +73,7 @@ end
 
 module Hand
   def show_hand
-    puts "----#{name}'s Hand ----"
+    puts "---- #{name}'s Hand ----"
     cards.each do |card|
       puts "=> #{card}"
     end
@@ -138,9 +138,21 @@ class Player < Participant
 end 
 
 class Dealer < Participant
+  ROBOTS = ["R2D2", "Hal", "Chappie", "Sonny", "Number 5"]
+
+  def set_name
+    self.name = ROBOTS.sample
+  end
+
+  def show_flop
+    puts "---- #{name}'s Hand ----"
+    puts "#{cards.first}"
+    puts " ?? "
+    puts ""
+  end
 end
 
-class Game 
+class TwentyOne 
   def start 
     deal_cards
     show_initial_cards
@@ -150,4 +162,4 @@ class Game
   end
 end 
 
-Game.new.start
+TwentyOne.new.start
