@@ -146,7 +146,7 @@ class Dealer < Participant
 
   def show_flop
     puts "---- #{name}'s Hand ----"
-    puts "#{cards.first}"
+    puts cards.first
     puts " ?? "
     puts ""
   end
