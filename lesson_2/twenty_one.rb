@@ -3,27 +3,27 @@ class Card
   FACES = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
 
   def initialize(suit, face)
-    @suit = suit 
-    @face = face 
+    @suit = suit
+    @face = face
   end
-  
+
   def to_s
     "The #{face} of #{suit}"
   end
 
-  def face 
+  def face
     case @face
     when "J" then "Jack"
     when "Q" then "Queen"
     when "K" then "King"
     when "A" then "Ace"
-    else 
-      @face 
+    else
+      @face
     end
   end
 
-  def suit 
-    case @suit 
+  def suit
+    case @suit
     when "H" then "Hearts"
     when "D" then "Diamonds"
     when "S" then "Spades"
@@ -35,28 +35,28 @@ class Card
     face == "Ace"
   end
 
-  def king? 
+  def king?
     face == "King"
-  end 
+  end
 
-  def queen? 
+  def queen?
     face == "Queen"
   end
 
-  def jack? 
+  def jack?
     face == "Jack"
   end
-end 
+end
 
-class Deck 
+class Deck
   attr_accessor :cards
 
-  def initialize 
+  def initialize
     @cards = []
     Card::SUITS.each do |suit|
       Card::FACES.each do |face|
         @cards << Card.new(suit, face)
-      end 
+      end
     end
 
     scramble!
@@ -69,7 +69,7 @@ class Deck
   def deal_one
     cards.pop
   end
-end 
+end
 
 module Hand
   def show_hand
@@ -81,24 +81,26 @@ module Hand
     puts ""
   end
 
-  def total 
+  def total
     total = 0
     cards.each do |card|
       if card.ace?
         total += 11
       elsif card.jack? || card.queen? || card.king?
-        total += 10 
-      else 
+        total += 10
+      else
         total += card.face.to_i
       end
     end
+    adjust_total(total)
+  end
 
-    # correct for Aces 
-    cards.select(&:ace?).count.times do 
+  def adjust_total(total)
+    # correct for Aces
+    cards.select(&:ace?).count.times do
       break if total <= 21
-      total -= 10 
+      total -= 10
     end
-
     total
   end
 
@@ -111,10 +113,11 @@ module Hand
   end
 end
 
-class Participant 
+class Participant
   include Hand
 
   attr_accessor :name, :cards
+
   def initialize
     @cards = []
     set_name
@@ -122,21 +125,21 @@ class Participant
 end
 
 class Player < Participant
-  def set_name 
+  def set_name
     name = ''
-    loop do 
+    loop do
       puts "What's your name?"
       name = gets.chomp
       break unless name.empty?
       puts "Sorry, must enter a name!"
     end
-    self.name = name 
-  end 
+    self.name = name
+  end
 
-  def show_flop 
+  def show_flop
     show_hand
   end
-end 
+end
 
 class Dealer < Participant
   ROBOTS = ["R2D2", "Hal", "Chappie", "Sonny", "Number 5"]
@@ -153,23 +156,23 @@ class Dealer < Participant
   end
 end
 
-class TwentyOne 
+class TwentyOne
   attr_accessor :deck, :player, :dealer
 
-  def initialize 
+  def initialize
     @deck = Deck.new
     @player = Player.new
     @dealer = Dealer.new
   end
 
-  def reset 
+  def reset
     self.deck = Deck.new
     player.cards = []
     dealer.cards = []
   end
 
   def deal_cards
-    2.times do 
+    2.times do
       player.add_card(deck.deal_one)
       dealer.add_card(deck.deal_one)
     end
@@ -180,46 +183,46 @@ class TwentyOne
     dealer.show_flop
   end
 
-  def player_turn 
+  def player_turn
     puts "#{player.name}'s turn..."
 
-    loop do 
+    loop do
       puts "Would you like to (h)it or (s)tay?"
       answer = nil
-      loop do 
+      loop do
         answer = gets.chomp.downcase
         break if ["h", "s"].include?(answer)
         puts "Sorry, must enter 'h' or 's'."
       end
-      
+
       if answer == "s"
         puts "#{player.name} stays!"
-        break 
+        break
       elsif player.busted?
-        break 
-      else 
-        #show update only for hit
+        break
+      else
+        # show update only for hit
         player.add_card(deck.deal_one)
         puts "#{player.name} hits!"
         player.show_hand
         break if player.busted?
-      end 
-    end 
-  end 
+      end
+    end
+  end
 
   def dealer_turn
     puts "#{dealer.name}'s turn..."
 
-    loop do 
+    loop do
       if dealer.total >= 17 && !dealer.busted?
         puts "#{dealer.name} stays!"
         break
       elsif dealer.busted?
-        break 
+        break
       else
         puts "#{dealer.name} hits!"
         dealer.add_card(deck.deal_one)
-      end 
+      end
     end
   end
 
@@ -236,19 +239,19 @@ class TwentyOne
     dealer.show_hand
   end
 
-  def show_result 
+  def show_result
     if player.total > dealer.total
       puts "It looks like #{player.name} wins!"
     elsif player.total < dealer.total
       puts "It looks like #{dealer.name} wins!"
     else
       puts "It's a tie!"
-    end 
+    end
   end
 
   def play_again?
     answer = nil
-    loop do 
+    loop do
       puts "Would you like to play again? (y/n)"
       answer = gets.chomp.downcase
       break if ["y", "n"].include?(answer)
@@ -258,8 +261,8 @@ class TwentyOne
     answer == 'y'
   end
 
-  def start 
-    loop do 
+  def start
+    loop do
       system 'clear'
       deal_cards
       show_flop
@@ -270,8 +273,8 @@ class TwentyOne
         if play_again?
           reset
           next
-        else 
-          break 
+        else
+          break
         end
       end
 
@@ -282,11 +285,11 @@ class TwentyOne
           reset
           next
         else
-          break 
-        end 
+          break
+        end
       end
 
-      #both stayed 
+      # both stayed
       show_cards
       show_result
       play_again? ? reset : break
@@ -294,7 +297,7 @@ class TwentyOne
 
     puts "Thank you for playing Twenty-One. Goodbye!"
   end
-end 
+end
 
 game = TwentyOne.new
 game.start
