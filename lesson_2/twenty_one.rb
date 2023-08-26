@@ -125,12 +125,25 @@ class Card
 end 
 
 class Deck 
-  attr_reader :deck
+  attr_accessor :cards
 
   def initialize 
+    @cards = []
+    Card::SUITS.each do |suit|
+      Card::FACES.each do |face|
+        @cards << Card.new(suit, face)
+      end 
+    end
+
+    scramble!
   end
 
-  def deal
+  def scramble!
+    cards.shuffle!
+  end
+
+  def deal_one
+    cards.pop
   end
 end 
 
