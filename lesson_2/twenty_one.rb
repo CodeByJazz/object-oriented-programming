@@ -84,13 +84,9 @@ module Hand
   def total
     total = 0
     cards.each do |card|
-      if card.ace?
-        total += 11
-      elsif card.jack? || card.queen? || card.king?
-        total += 10
-      else
-        total += card.face.to_i
-      end
+      total += 11 if card.ace?
+      total += 10 if card.jack? || card.queen? || card.king?
+      total += card.face.to_i
     end
     adjust_total(total)
   end
