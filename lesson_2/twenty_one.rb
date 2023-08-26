@@ -1,24 +1,3 @@
-# class Player < Participant
-#   include Hand
-# end 
-
-# class Dealer < Participant
-#   include Hand
-
-#   def deal 
-#   end
-
-#   def hit 
-#   end
-# end
-
-# class Participant 
-#   def initialize
-#     @name = name 
-#     @cards = cards
-#   end
-# end
-
 class Card
   SUITS = ["H", "D", "C", "S"]
   FACES = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
@@ -130,6 +109,35 @@ module Hand
   def busted?
     total > 21
   end
+end
+
+class Participant 
+  include Hand
+
+  attr_accessor :name, :cards
+  def initialize
+    @cards = []
+    set_name
+  end
+end
+
+class Player < Participant
+  def set_name 
+    name = ''
+    loop do 
+      puts "What's your name?"
+      break unless name.empty?
+      puts "Sorry, must enter a name!"
+    end
+    self.name = name 
+  end 
+
+  def show_flop 
+    show_hand
+  end
+end 
+
+class Dealer < Participant
 end
 
 class Game 
