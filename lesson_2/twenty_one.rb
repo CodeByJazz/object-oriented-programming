@@ -222,6 +222,11 @@ class TwentyOne
   end
 
   def show_busted
+    if player.busted?
+      puts "It looks like #{player.name} busted! #{dealer.name} wins!"
+    elsif dealer.busted?
+      puts "It looks like #{dealer.name} busted! #{player.name} wins!"
+    end
   end
 
   def show_cards
