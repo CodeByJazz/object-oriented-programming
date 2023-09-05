@@ -1,6 +1,3 @@
-# -------------------
-# Add the appropriate accessor methods to the following code.
-
 # class Person
 #   attr_accessor :name
 # end
@@ -8,9 +5,6 @@
 # person1 = Person.new
 # person1.name = 'Jessica'
 # puts person1.name
-
-# -------------------
-# Add the appropriate accessor methods to the following code.
 
 # class Person
 #   attr_accessor :name
@@ -22,23 +16,12 @@
 # person1.phone_number = '0123456789'
 # puts person1.name
 
-# -------------------
-# Modify the following code 
-# so that the value of @phone_number 
-# can still be read as on line 10,
-# but cannot be changed as on line 12.
-
 # class Person
 #   attr_reader :phone_number
 
 #   def initialize(number)
 #     @phone_number = number
 #   end
-
-#   private 
-
-#   attr_writer :phone_number
-
 # end
 
 # person1 = Person.new(1234567899)
@@ -46,14 +29,6 @@
 
 # person1.phone_number = 9987654321
 # puts person1.phone_number
-
-# -------------------
-# Using the following code,
-# add the appropriate accessor methods.
-# Keep in mind that the last_name getter
-# shouldn't be visible outside the class,
-# while the first_name getter
-# should be visible outside the class.
 
 # class Person
 #   attr_accessor :first_name
@@ -64,24 +39,18 @@
 #   end
 
 #   private 
-  
+
 #   attr_reader :last_name
 # end
 
 # person1 = Person.new
 # person1.first_name = 'Dave'
 # person1.last_name = 'Smith'
+# puts person1.last_name
 # puts person1.first_equals_last?
-# person1.last_name
-
-# -------------------
-# Using the following code,
-# add the appropriate accessor methods.
-# Keep in mind that @age
-# should only be visible to instances of Person.
 
 # class Person
-#   attr_writer :age
+#   attr_writer :age 
 
 #   def older_than?(other)
 #     age > other.age
@@ -100,11 +69,6 @@
 
 # puts person1.older_than?(person2)
 
-# -------------------
-# Using the following code,
-# add the appropriate accessor methods
-# so that @name is capitalized upon assignment.
-
 # class Person
 #   attr_reader :name
 
@@ -117,16 +81,10 @@
 # person1.name = 'eLiZaBeTh'
 # puts person1.name
 
-# -------------------
-# Using the following code,
-# add the appropriate accessor methods
-# so that @name is returned
-# with the added prefix 'Mr.'.
-
 # class Person
 #   attr_writer :name
 
-#   def name
+#   def name 
 #     "Mr. #{@name}"
 #   end
 # end
@@ -135,68 +93,50 @@
 # person1.name = 'James'
 # puts person1.name
 
-# -------------------
-# The following code is flawed.
-# It currently allows @name
-# to be modified from outside the method
-# via a destructive method call.
-# Fix the code so 
-# that it returns a copy of @name
-# instead of a reference to it.
-
 # class Person
-
 #   def initialize(name)
 #     @name = name
 #   end
 
 #   def name 
-#     @name.clone 
-#   end 
+#     @name.clone
+#   end
 # end
 
 # person1 = Person.new('James')
 # person1.name.reverse!
 # puts person1.name
 
-# -------------------
-# Using the following code,
-# multiply @age by 2 upon assignment,
-# then multiply @age by 2 again
-# when @age is returned by the getter method.
-
 # class Person
 #   def age=(age)
-#     @age = age * 2
+#     @age = double_age(age)
 #   end
 
-#   def age
-#     @age * 2
-#   end 
+#   def age 
+#     double_age(@age)
+#   end
+
+#   private 
+
+#   def double_age(age)
+#     age * 2
+#   end
 # end
 
 # person1 = Person.new
 # person1.age = 20
 # puts person1.age
 
-# -------------------
-# Modify the following code to accept a string
-# containing a first and last name.
-# The name should be split into two instance variables
-# in the setter method,
-# then joined in the getter method
-# to form a full name.
-
 # class Person
 #   def name=(name)
-#     full_name = name.split
-#     @first_name = full_name.first
-#     @last_name = full_name.last
+#     parts = name.split 
+#     @first_name = parts[0]
+#     @last_name = parts[1]
 #   end
 
 #   def name 
 #     "#{@first_name} #{@last_name}"
-#   end 
+#   end
 # end
 
 # person1 = Person.new
